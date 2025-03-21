@@ -1,8 +1,10 @@
 from typing import Callable, Any
 import time
 
+type DataCallable[T] = Callable[..., T]
 
-def measure_execution_time[T](fun: Callable[..., T]) -> Callable[..., T]:
+
+def measure_execution_time[T](fun: DataCallable) -> DataCallable:
     def wrapper(*args: Any, **kwargs: Any) -> T:
         start_time = time.time()
         print(f'Calling {fun.__name__} with {args}, {kwargs}')
@@ -12,8 +14,14 @@ def measure_execution_time[T](fun: Callable[..., T]) -> Callable[..., T]:
         return result
     return wrapper
 
+@measure_execution_time
+def do_action(a: int, b:int) -> int:
+    time.sleep(2)
+    return 10
+
 def main() -> None:
-    pass
+
+    print(do_action(10, 20))
 
 if __name__ == '__main__':
     main()
